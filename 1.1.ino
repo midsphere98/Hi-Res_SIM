@@ -60,24 +60,15 @@ void printTime() {
 
 
 void loop() {
-  for (int i=0; i<6400; i++)    //Forward 5000 steps
+  for (int i=0; i<4000; i++)   //i 값이 클 수록 많이 내려가고 작을 수록 조금 내려감 
   {
-    digitalWrite(DIR,LOW);
+    digitalWrite(DIR,HIGH); //LOW면 내려가고 HIGH면 올라감
     digitalWrite(ENA,HIGH);
     digitalWrite(PUL,HIGH);
-    delayMicroseconds(100);
+    delayMicroseconds(800); //속도조절 -> 값이 낮을 수록 빠름
     digitalWrite(PUL,LOW);
-    delayMicroseconds(100);
-  }
-  for (int i=0; i<6400; i++)   //Backward 5000 steps
-  {
-    digitalWrite(DIR,HIGH);
-    digitalWrite(ENA,HIGH);
-    digitalWrite(PUL,HIGH);
-    delayMicroseconds(100);
-    digitalWrite(PUL,LOW);
-    delayMicroseconds(100);
+    delayMicroseconds(800); //속도조절 -> 값이 낮을 수록 빠름
   }
   printTime();
-  delay(1000);
+  delay(0); //i만큼 내려간 이후 얼마나 기다리느냐 : 1000이 1초
 }
