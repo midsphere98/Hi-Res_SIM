@@ -19,6 +19,9 @@
 // 1. i값 자료형을 unsigned long으로 바꾸어줫음. 왜냐면 부호가 필요 없기 때문 그만큼의 자료형 범위를 확보하기 위함임. 그러니까 음수는 사용할수 없음.
 // 2. setnum을 DIVER_DOWN으로 교체하였음. 함수명만 고쳣고 기능은 동일함.
 
+// 2022.04.21
+// 1. 시작 시 다이버를 끌어올려서 영점을 잡도록 순서 바꿧음
+
 
 
 #include <IRremote.hpp>
@@ -63,6 +66,7 @@ int N = 0; //1분
 
 RTC_DS3231 rtc;//rtc 선언
 
+
 void setup() 
 {
   pinMode (relay, OUTPUT);
@@ -78,21 +82,26 @@ void setup()
   Serial.print("\n\n\n# # # # # # # # # # # #\n");
   Serial.print("HI-res SIM\n");
   Serial.print("# # # # # # # # # # # #\n");
-  Serial.print("# # # # # 1 HOUR Version. 1 # # # # #\n \n \n");
+  Serial.print("# # # # # 1 HOUR Version. 20220421 # # # # #\n \n \n");
 
 
   Serial.print("= = = = = = = = = = = = = = = = = = = = = = = \n");
   Serial.print("Initializing Hi-res SIM \n");
-  Serial.print("getting time data from connected pc");
+  Serial.print("1. getting time data from connected pc");
 
   // rtc.adjust로 정해진 시간은 "컴파일 시간입니다"
   // 따라서 컴파일 땡 하는 순간의 시간을 잡게 되므로, 컴파일 이후 시간 연산이 안되는 동안에는 시간이 밀릴 수 밖에 없으니
   // 딜레이를 넣어 약간의 오차보정을 잡아줍니다.
+
   
   delay(300); //3초간 대기 // 시작시간 오차 잡는데 사용
   
     //rtc.adjust(DateTime(F(__DATE__), F(__TIME__))); //컴퓨터 시간 끌어다 씀. 시간 재설정할때 주석 풀것.
    // rtc.adjust(DateTime(2022,3,13,19,59,40)); //수동(yyyy, mm , dd, hh, mm, ss)
+
+  Serial.print("= = = = = = = = = = = = = = = = = = = = = = = \n");
+  Serial.print("2. Initializing position : CRANK UP in process\n");
+  goingUp(); //스탑센서 닿을 때 까지 끌어올리기
   
   irrecv.enableIRIn(); //IR수신시작
 }
@@ -177,6 +186,7 @@ void loop()
   DateTime now = rtc.now();
   DateTime correct (now + TimeSpan(0,0,0,t_correction)); //시간오차 보정; 일,시간,분,초
   
+//======리모컨 신호 받는 부분
 //  switch(isRemote)
 //  {
 //    case true :
