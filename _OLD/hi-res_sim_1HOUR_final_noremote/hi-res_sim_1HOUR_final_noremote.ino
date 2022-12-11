@@ -22,6 +22,10 @@
 // 2022.04.21
 // 1. 시작 시 다이버를 끌어올려서 영점을 잡도록 순서 바꿧음
 
+// 2022.12.10
+// 1. 형상 업데이트.
+// 2. 리모콘 죽였음.(삼고빔)
+
 
 
 #include <IRremote.hpp>
@@ -97,7 +101,7 @@ void setup()
   delay(300); //3초간 대기 // 시작시간 오차 잡는데 사용
   
     //rtc.adjust(DateTime(F(__DATE__), F(__TIME__))); //컴퓨터 시간 끌어다 씀. 시간 재설정할때 주석 풀것.
-   // rtc.adjust(DateTime(2022,3,13,19,59,40)); //수동(yyyy, mm , dd, hh, mm, ss)
+    rtc.adjust(DateTime(2022,3,13,19,59,40)); //수동(yyyy, mm , dd, hh, mm, ss)
 
   Serial.print("= = = = = = = = = = = = = = = = = = = = = = = \n");
   Serial.print("2. Initializing position : CRANK UP in process\n");
@@ -285,15 +289,6 @@ void loop()
                   isTime = false;
                 }
 
-            if(irrecv.decode(&results)) //리모컨 시그널 받기
-            {
-              if(results.value == 0xFF6897) //* 을 누르게되면
-              {
-                isRemote = true; //이제 리모컨 조종으로 넘어갈거임
-                break;
-              }
-            }
-
             
             if(isTime == true) //정시가되면
             {
@@ -311,10 +306,10 @@ void loop()
           N = 0; //60분이 되면 N은 다시 0으로 돌아갈거임.
         }
         
-        break;            //이제 꺼져
+        break;            //구문종료
     
     case false :
-        break; //움직여야 하니까 꺼져 
+        break; //구문종료; 작동시작
             
   }
   // = = = = = = = = = = = = = = = = = 기다려야하는지 판단(종료)
