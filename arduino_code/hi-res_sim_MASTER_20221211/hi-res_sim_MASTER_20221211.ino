@@ -3,7 +3,7 @@
 // | __ | |___| '_/ -_|_-< \__ \| || |\/| |
 // |_||_|_|   |_| \___/__/ |___/___|_|  |_|
 // 
-// # # # # # 1 MIN Version. 3 # # # # #
+// # # # # # 1 HOUR Version. 4 # # # # #
 
 //!!!UPDATE!!!
 // 2022.03.31
@@ -179,67 +179,9 @@ void loop()
 {
   DateTime now = rtc.now();
   DateTime correct (now + TimeSpan(0,0,0,t_correction)); //시간오차 보정; 일,시간,분,초
-  // REMOTE 코드 잔재. 제거예정
-
-  // switch(isRemote)
-  // {
-  //   case true :
-  //   Serial.print("Remote Adjust mode\n");
-  //   Serial.print("Push 'up' arrow to  crank up, 'down' arrow to crank down, 'OK' for confirm.");
-  //     while (isRemote == true) //리모트 선언이 false가 될 때 까지. *은 ff6897이고 #은 FFB04F임 위는 FF18E7이고 아래는 FF4AB5 OK는 FF38C7
-  //     {
-  //       digitalWrite(ENA,HIGH); 
-  //       digitalWrite(relay, HIGH); //스텝모터 잠금해제
-        
-  //       if(irrecv.decode(&results)) //리모컨 시그널 받기
-  //       {
-  //         Serial.println(results.value, HEX);
-  //         irrecv.resume();
-          
-  //         if (results.value == 0xFF4AB5)
-  //         {
-  //           Serial.print("weeeeee");
-  //           for(int crankup = 0; crankup <= updown; crankup++)
-  //           {
-  //             digitalWrite(DIR,HIGH); //LOW면 올라가고 HIGH면 내려감
-  //             digitalWrite(PUL,HIGH);
-  //             delayMicroseconds(300); //속도조절 -> 값이 낮을 수록 빠름
-  //             digitalWrite(PUL,LOW);
-  //             delayMicroseconds(300); //속도조절 -> 값이 낮을 수록 빠름
-  //           }
-  //         }
   
-  //         if (results.value == 0xFF18E7)
-  //         {
-  //           Serial.print("weeeeee");
-  //           for(int crankdown = 0; crankdown <= updown; crankdown++)
-  //           {
-  //             digitalWrite(DIR,LOW); //LOW면 올라가고 HIGH면 내려감
-  //             digitalWrite(PUL,HIGH);
-  //             delayMicroseconds(300); //속도조절 -> 값이 낮을 수록 빠름
-  //             digitalWrite(PUL,LOW);
-  //             delayMicroseconds(300); //속도조절 -> 값이 낮을 수록 빠름
-  //           }
-  //         }
-
-        
-  //       } //리모컨 시그널 받기 끝
-        
-  //       if(results.value == 0xFF38C7) //OK 버튼 신호가 들어오면
-  //       {
-  //         digitalWrite(ENA,LOW); 
-  //         digitalWrite(relay, LOW); //스텝모터 꺼버려 
-        
-  //         isRemote = false; //리모컨 조종을 꺼버림. 이제 본 작동으로 넘어갈거임
-  //         break;
-  //       }
-  //     }
-
-  //     default:
-  //       break;
-  // }
-
-  if(correct.minute() == OPERATION_TIME && correct.second() == 0)
+  // OPERATION_TIME 이면 1시간 사이클로 사용 가능하고 N 이면 
+  if(correct.minute() == OPERATION_TIME && correct.second() == 0) 
   {
     isTime = true;
   }else{
@@ -254,7 +196,7 @@ void loop()
     case true :
             DateTime now = rtc.now();
             DateTime correct (now + TimeSpan(0,0,0,t_correction));
-        while (isTime != true) //정시가 될 때 까지 while문 반
+        while (isTime != true) //정시가 될 때 까지 while문 반복 
         {
 
             DateTime now = rtc.now();
@@ -269,7 +211,7 @@ void loop()
             Serial.print("/");
             Serial.print(N);
             Serial.print("\n");
-            //시간이나 띄울거임
+            //시간 띄우는 코드; N은 1분용 순환 횟수
             
               if(correct.minute() == OPERATION_TIME && correct.second() == 0)
                 {
@@ -283,12 +225,12 @@ void loop()
             
             if(isTime == true) //정시가되면
             {
-              isWaiting = false; //시간이 되었으니 움직여야지
-              break; //탈출~~~~~~~~~~~~~~~~~~~~~
+              isWaiting = false; //시간이 되었으니 움직인다
+              break; // 문 탈출 
             }
         }
         
-        N++; //1분증가
+        N++; //1분증가; 1분용 코드 
         
 
         
@@ -297,10 +239,10 @@ void loop()
           N = 0; //60분이 되면 N은 다시 0으로 돌아갈거임.
         }
         
-        break;            //이제 꺼져
+        break;            // 문 탈출
     
-    case false :
-        break; //움직여야 하니까 꺼져 
+    case false : // 만약 시간이 되었다면
+        break; //움직여야 하니까 대기 구문 탈출
             
   }
   // = = = = = = = = = = = = = = = = = 기다려야하는지 판단(종료)
